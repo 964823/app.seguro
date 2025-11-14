@@ -1,18 +1,32 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '../lib/supabaseClient';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Email:', email);
-    console.log('Password:', password);
+    setErrorMessage(''); // Limpa a mensagem de erro anterior
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password,
+    });
+
+    if (error) {
+      setErrorMessage(error.message);
+    } else {
+      navigate('/dashboard');
+    }
   };
 
   return (
@@ -29,6 +43,11 @@ const Login = () => {
         </div>
         <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-background-dark sm:p-8">
           <form className="space-y-6" onSubmit={handleSubmit}>
+            {errorMessage && (
+              <div className="rounded-lg bg-red-100 p-4 text-center text-red-700 dark:bg-red-900 dark:text-red-300">
+                {errorMessage}
+              </div>
+            )}
             <div className="flex flex-col">
               <label className="pb-2 text-base font-medium text-[#111418] dark:text-gray-300" htmlFor="email">Email ou Usuário</label>
               <input
