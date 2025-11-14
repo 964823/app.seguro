@@ -15,7 +15,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMessage(''); // Limpa a mensagem de erro anterior
+    setErrorMessage(''); // Clear previous error message
 
     const { error } = await supabase.auth.signInWithPassword({
       email: email,
@@ -43,11 +43,6 @@ const Login = () => {
         </div>
         <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-background-dark sm:p-8">
           <form className="space-y-6" onSubmit={handleSubmit}>
-            {errorMessage && (
-              <div className="rounded-lg bg-red-100 p-4 text-center text-red-700 dark:bg-red-900 dark:text-red-300">
-                {errorMessage}
-              </div>
-            )}
             <div className="flex flex-col">
               <label className="pb-2 text-base font-medium text-[#111418] dark:text-gray-300" htmlFor="email">Email ou Usuário</label>
               <input
@@ -82,6 +77,11 @@ const Login = () => {
                 </button>
               </div>
             </div>
+
+            {errorMessage && (
+              <div className="text-center text-red-500">{errorMessage}</div>
+            )}
+
             <div className="pt-2">
               <button
                 className="flex h-12 w-full min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-primary px-5 text-base font-bold leading-normal tracking-[0.015em] text-white transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 dark:focus:ring-offset-background-dark"
